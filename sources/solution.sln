@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{69AAF4C5-9DD4-4D31-8199-D665BAEAE81D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{3E094673-3B61-4DD6-BE7F-26FC522DF7F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Business\Services.csproj", "{3E094673-3B61-4DD6-BE7F-26FC522DF7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{48216D83-6D09-4A42-B182-7AB77984F7A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{48216D83-6D09-4A42-B182-7AB77984F7A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
