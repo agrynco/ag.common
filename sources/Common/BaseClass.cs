@@ -14,6 +14,7 @@ namespace Common
                 .Where(x => x.GetCustomAttribute(typeof(IgnoreAttribute)) == null).ToArray();
             var absentProperties = new List<string>();
             foreach (PropertyInfo propertyInfo in propertyInfos)
+            {
                 try
                 {
                     propertyInfo.SetValue(this, PropertyValueManager.GetValue(propertyInfo.Name, source));
@@ -29,8 +30,12 @@ namespace Common
                 {
                     absentProperties.Add(propertyInfo.Name);
                 }
+            }
 
-            if (absentProperties.Count > 0) throw new ThereIsNoPropertyException(absentProperties, source);
+            if (absentProperties.Count > 0)
+            {
+                throw new ThereIsNoPropertyException(absentProperties, source);
+            }
 
             return this;
         }

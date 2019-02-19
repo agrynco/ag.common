@@ -12,7 +12,11 @@ namespace Common.ToStringConverters
             var stringBuilder = new StringBuilder();
             foreach (object o in value)
             {
-                if (stringBuilder.Length != 0) stringBuilder.Append(", ");
+                if (stringBuilder.Length != 0)
+                {
+                    stringBuilder.Append(", ");
+                }
+
                 stringBuilder.Append(ToStringConverter.Instance.Convert(o));
             }
 

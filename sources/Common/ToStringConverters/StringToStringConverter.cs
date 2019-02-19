@@ -10,7 +10,11 @@ namespace Common.ToStringConverters
     {
         public override string Convert(string value)
         {
-            if (value != null) value = value.Replace("'", "''");
+            if (value != null)
+            {
+                value = value.Replace("'", "''");
+            }
+
             return string.Format("'{0}'", value);
         }
     }

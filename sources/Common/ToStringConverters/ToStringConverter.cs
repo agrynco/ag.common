@@ -20,22 +20,33 @@ namespace Common.ToStringConverters
             RegisterAllConverters();
         }
 
-        public static ToStringConverter Instance => _instance ?? (_instance = new ToStringConverter());
-
         public string Convert(object value)
         {
-            if (value == null) return "null";
+            if (value == null)
+            {
+                return "null";
+            }
+
             Type type = value.GetType();
             type = type.IsEnum ? typeof(Enum) : type;
 
-            if (_converters.ContainsKey(type)) return _converters[type].Convert(value);
+            if (_converters.ContainsKey(type))
+            {
+                return _converters[type].Convert(value);
+            }
 
             throw new KeyNotFoundException($"Converter for type '{type}' is not registered.");
         }
 
+        public static ToStringConverter Instance => _instance ?? (_instance = new ToStringConverter());
+
         public static string ConvertClass(object obj)
         {
-            if (obj == null) return Instance.Convert(null);
+            if (obj == null)
+            {
+                return Instance.Convert(null);
+            }
+
             var alreadyToStringConverted = new Dictionary<object, object>();
             return ConvertClass(obj, alreadyToStringConverted);
         }
@@ -79,7 +90,11 @@ namespace Common.ToStringConverters
                 var propertuesToBeConverted = GetPropertiesToBeConverted(obj.GetType());
                 foreach (PropertyInfo propertyInfo in propertuesToBeConverted)
                 {
-                    if (result.Length > 1) result.Append("; ");
+                    if (result.Length > 1)
+                    {
+                        result.Append("; ");
+                    }
+
                     try
                     {
                         object propertyValue = propertyInfo.GetValue(obj, null);
@@ -95,7 +110,10 @@ namespace Common.ToStringConverters
                             }
 
                             if (result.ToString().EndsWith(item_separator))
+                            {
                                 result.Length = result.Length - item_separator.Length;
+                            }
+
                             result.Append("]");
                         }
                         else
@@ -153,9 +171,13 @@ namespace Common.ToStringConverters
             }
 
             if (IsClass(propertyValue))
+            {
                 valuesForFormattedString.Add(ConvertClass(propertyValue, alreadyToStringConverted));
+            }
             else
+            {
                 valuesForFormattedString.Add(Instance.Convert(propertyValue));
+            }
 
             result.Append(string.Format(formatPattern, valuesForFormattedString.ToArray()));
         }

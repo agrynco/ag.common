@@ -1,7 +1,5 @@
-﻿#region Usings
-using System;
+﻿using System;
 using System.Reflection;
-#endregion
 
 namespace Common
 {
@@ -12,7 +10,10 @@ namespace Common
         public static object GetValue(string fullPropertyName, object source)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException("source", "Parameter 'source' must be different from null");
+            }
+
             PropertyInfoAndObj propertyInfoAndObj =
                 GetPropertyPropertyInfoAndObjForFinalProperty(source, fullPropertyName);
             return propertyInfoAndObj.PropertyInfo.GetValue(propertyInfoAndObj.OwnerOfProperty, null);
@@ -30,7 +31,10 @@ namespace Common
 
             PropertyInfo propertyInfo = referenceToOwnerOfProperty.GetType().GetProperty(newPropertyName);
 
-            if (propertyInfo == null) throw new ThereIsNoPropertyException(fullPropertyName, obj);
+            if (propertyInfo == null)
+            {
+                throw new ThereIsNoPropertyException(fullPropertyName, obj);
+            }
 
             return new PropertyInfoAndObj(propertyInfo, referenceToOwnerOfProperty);
         }
@@ -51,6 +55,16 @@ namespace Common
 
         internal class PropertyInfoAndObj
         {
+            public PropertyInfoAndObj(PropertyInfo propertyInfo, object ownerOfProperty)
+            {
+                PropertyInfo = propertyInfo;
+                OwnerOfProperty = ownerOfProperty;
+            }
+
+            public object OwnerOfProperty { get; }
+
+            public PropertyInfo PropertyInfo { get; }
+
             /// <summary>
             /// Sets the <see cref="value"/> to the <see cref="fullPropertyName"/>
             /// </summary>
@@ -66,16 +80,6 @@ namespace Common
 
                 propertyInfoAndObj.PropertyInfo.SetValue(propertyInfoAndObj.OwnerOfProperty, valueToSet, null);
             }
-
-            public PropertyInfoAndObj(PropertyInfo propertyInfo, object ownerOfProperty)
-            {
-                PropertyInfo = propertyInfo;
-                OwnerOfProperty = ownerOfProperty;
-            }
-
-            public object OwnerOfProperty { get; }
-
-            public PropertyInfo PropertyInfo { get; }
         }
     }
 }

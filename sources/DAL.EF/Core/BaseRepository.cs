@@ -13,6 +13,7 @@ namespace DAL.EF.Core
     {
         public BaseRepository(TDbContext dbContext)
         {
+            DbContext = dbContext;
             DbSet = DbContext.Set<TEntity>();
         }
 
@@ -27,7 +28,10 @@ namespace DAL.EF.Core
 
         public virtual void Delete(params TEntityId[] id)
         {
-            foreach (TEntityId entityId in id) Delete(GetById(entityId));
+            foreach (TEntityId entityId in id)
+            {
+                Delete(GetById(entityId));
+            }
         }
 
         public virtual void Delete(params TEntity[] entities)
@@ -46,7 +50,10 @@ namespace DAL.EF.Core
             DbSet.Attach(entity);
             DbContext.Entry(entity).State = EntityState.Modified;
 
-            if (save) DbContext.SaveChanges();
+            if (save)
+            {
+                DbContext.SaveChanges();
+            }
         }
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
@@ -54,14 +61,24 @@ namespace DAL.EF.Core
         {
             IQueryable<TEntity> query = DbContext.Set<TEntity>();
 
-            if (filter != null) query = query.Where(filter);
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
             if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
                 foreach (string includeProperty in includeProperties.Split(new[] {','},
                     StringSplitOptions.RemoveEmptyEntries))
+                {
                     query = query.Include(includeProperty);
+                }
+            }
 
-            if (orderBy != null) return orderBy(query).AsQueryable();
+            if (orderBy != null)
+            {
+                return orderBy(query).AsQueryable();
+            }
 
             return query.AsQueryable();
         }
