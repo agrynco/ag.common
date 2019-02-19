@@ -18,22 +18,6 @@ namespace Common
             return propertyInfoAndObj.PropertyInfo.GetValue(propertyInfoAndObj.OwnerOfProperty, null);
         }
 
-        /// <summary>
-        /// Sets the <see cref="value"/> to the <see cref="fullPropertyName"/>
-        /// </summary>
-        /// <param name="destination">Object which contains the property with <see cref="fullPropertyName"/></param>
-        /// <param name="fullPropertyName"> name of the property to be changed</param>
-        /// <param name="value">Value of the property to be setted</param>
-        public static void SetValue(object destination, string fullPropertyName, object value)
-        {
-            object valueToSet = value == DBNull.Value ? null : value;
-
-            PropertyInfoAndObj propertyInfoAndObj =
-                GetPropertyPropertyInfoAndObjForFinalProperty(destination, fullPropertyName);
-
-            propertyInfoAndObj.PropertyInfo.SetValue(propertyInfoAndObj.OwnerOfProperty, valueToSet, null);
-        }
-
         private static PropertyInfoAndObj GetPropertyPropertyInfoAndObjForFinalProperty(object obj,
             string fullPropertyName)
         {
@@ -67,6 +51,22 @@ namespace Common
 
         internal class PropertyInfoAndObj
         {
+            /// <summary>
+            /// Sets the <see cref="value"/> to the <see cref="fullPropertyName"/>
+            /// </summary>
+            /// <param name="destination">Object which contains the property with <see cref="fullPropertyName"/></param>
+            /// <param name="fullPropertyName"> name of the property to be changed</param>
+            /// <param name="value">Value of the property to be setted</param>
+            public static void SetValue(object destination, string fullPropertyName, object value)
+            {
+                object valueToSet = value == DBNull.Value ? null : value;
+
+                PropertyInfoAndObj propertyInfoAndObj =
+                    GetPropertyPropertyInfoAndObjForFinalProperty(destination, fullPropertyName);
+
+                propertyInfoAndObj.PropertyInfo.SetValue(propertyInfoAndObj.OwnerOfProperty, valueToSet, null);
+            }
+
             public PropertyInfoAndObj(PropertyInfo propertyInfo, object ownerOfProperty)
             {
                 PropertyInfo = propertyInfo;

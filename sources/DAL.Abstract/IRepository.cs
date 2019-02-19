@@ -1,13 +1,11 @@
-﻿#region Usings
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Domain;
-#endregion
 
-namespace DAL.Abstract.Core
+namespace DAL.Abstract
 {
-    public interface ICRUDRepository<TEntity, TEntityId> : IEntity<TEntityId>
+    public interface IRepository<TEntity, TEntityId> where TEntity : IEntity<TEntityId>
     {
         TEntity Add(TEntity entity);
         void Delete(params TEntityId[] id);
