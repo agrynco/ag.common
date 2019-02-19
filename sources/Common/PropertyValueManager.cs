@@ -7,33 +7,8 @@ namespace Common
 {
     public class PropertyValueManager
     {
-        #region Static Fields (public)
         public static readonly char PROPERTY_SEPARATOR = '.';
-        #endregion
 
-        #region Nested type: PropertyInfoAndObj
-        internal class PropertyInfoAndObj
-        {
-            #region Constructors
-            public PropertyInfoAndObj(PropertyInfo propertyInfo, object ownerOfProperty)
-            {
-                PropertyInfo = propertyInfo;
-                OwnerOfProperty = ownerOfProperty;
-            }
-            #endregion
-
-            #region Fields (private)
-            #endregion
-
-            #region Properties (public)
-            public object OwnerOfProperty { get; }
-
-            public PropertyInfo PropertyInfo { get; }
-            #endregion
-        }
-        #endregion
-
-        #region Static Methods (public)
         public static object GetValue(string fullPropertyName, object source)
         {
             if (source == null)
@@ -58,9 +33,7 @@ namespace Common
 
             propertyInfoAndObj.PropertyInfo.SetValue(propertyInfoAndObj.OwnerOfProperty, valueToSet, null);
         }
-        #endregion
 
-        #region Static Methods (private)
         private static PropertyInfoAndObj GetPropertyPropertyInfoAndObjForFinalProperty(object obj,
             string fullPropertyName)
         {
@@ -91,6 +64,18 @@ namespace Common
 
             return source;
         }
-        #endregion
+
+        internal class PropertyInfoAndObj
+        {
+            public PropertyInfoAndObj(PropertyInfo propertyInfo, object ownerOfProperty)
+            {
+                PropertyInfo = propertyInfo;
+                OwnerOfProperty = ownerOfProperty;
+            }
+
+            public object OwnerOfProperty { get; }
+
+            public PropertyInfo PropertyInfo { get; }
+        }
     }
 }

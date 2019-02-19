@@ -8,7 +8,6 @@ namespace Common
 {
     public class ThereIsNoPropertyException : Exception
     {
-        #region Constructors
         public ThereIsNoPropertyException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -38,6 +37,5 @@ namespace Common
                 string.Join(", ", propertyNames)))
         {
         }
-        #endregion
     }
 }

@@ -7,7 +7,6 @@ namespace Common.ToStringConverters
 {
     public class EnumerableToStringConverter : BaseToStringConverter<IEnumerable>
     {
-        #region Methods (public)
         public override string Convert(IEnumerable value)
         {
             var stringBuilder = new StringBuilder();
@@ -19,6 +18,5 @@ namespace Common.ToStringConverters
 
             return stringBuilder.Insert(0, '(').Append(')').ToString();
         }
-        #endregion
     }
 }

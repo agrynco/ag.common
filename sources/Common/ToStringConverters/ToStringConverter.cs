@@ -11,27 +11,17 @@ namespace Common.ToStringConverters
 {
     public class ToStringConverter : IParamValueToStringConverter
     {
-        #region Static Fields (private)
         private static ToStringConverter _instance;
-        #endregion
-
-        #region Fields (private)
         private readonly Dictionary<Type, IParamValueToStringConverter> _converters;
-        #endregion
 
-        #region Constructors
         private ToStringConverter()
         {
             _converters = new Dictionary<Type, IParamValueToStringConverter>();
             RegisterAllConverters();
         }
-        #endregion
 
-        #region Static Properties (public)
         public static ToStringConverter Instance => _instance ?? (_instance = new ToStringConverter());
-        #endregion
 
-        #region IParamValueToStringConverter Methods
         public string Convert(object value)
         {
             if (value == null) return "null";
@@ -42,24 +32,40 @@ namespace Common.ToStringConverters
 
             throw new KeyNotFoundException($"Converter for type '{type}' is not registered.");
         }
-        #endregion
 
-        #region Static Methods (public)
         public static string ConvertClass(object obj)
         {
             if (obj == null) return Instance.Convert(null);
             var alreadyToStringConverted = new Dictionary<object, object>();
             return ConvertClass(obj, alreadyToStringConverted);
         }
-        #endregion
 
-        #region Static Methods (private)
-        private static PropertyInfo[] GetPropertiesToBeConverted(Type type)
+        protected void Register(Type type, IParamValueToStringConverter converter)
         {
-            var propertyInfos = type.GetProperties();
+            _converters.Add(type, converter);
+        }
 
-            return propertyInfos
-                .Where(x => x.GetCustomAttributes(typeof(IgnoreConvertToStringAttribute), false).Length == 0).ToArray();
+        protected virtual void RegisterAllConverters()
+        {
+            Register(typeof(Guid), new GuidToStringConverter());
+            Register(typeof(Int32), new BaseToStringConverter<Int32>());
+            Register(typeof(uint), new BaseToStringConverter<uint>());
+            Register(typeof(Boolean), new BaseToStringConverter<Boolean>());
+            Register(typeof(string), new StringToStringConverter());
+            Register(typeof(decimal), new BaseToStringConverter<decimal>());
+            Register(typeof(Int64), new BaseToStringConverter<Int64>());
+            Register(typeof(DateTime), new BaseToStringConverter<DateTime>());
+            Register(typeof(DBNull), new DBNullToStringConverter());
+            Register(typeof(int[]), new EnumerableToStringConverter());
+            Register(typeof(Enum), new BaseToStringConverter<Enum>());
+            Register(typeof(double), new BaseToStringConverter<double>());
+            Register(typeof(Char), new BaseToStringConverter<Char>());
+            Register(typeof(TimeSpan), new BaseToStringConverter<TimeSpan>());
+        }
+
+        protected void Unregister(Type type)
+        {
+            _converters.Remove(type);
         }
 
         private static string ConvertClass(object obj, Dictionary<object, object> alreadyToStringConverted)
@@ -112,6 +118,14 @@ namespace Common.ToStringConverters
             return "Circular reference";
         }
 
+        private static PropertyInfo[] GetPropertiesToBeConverted(Type type)
+        {
+            var propertyInfos = type.GetProperties();
+
+            return propertyInfos
+                .Where(x => x.GetCustomAttributes(typeof(IgnoreConvertToStringAttribute), false).Length == 0).ToArray();
+        }
+
         private static bool IsClass(object propertyValue)
         {
             return propertyValue != null && !propertyValue.GetType().IsValueType &&
@@ -145,36 +159,5 @@ namespace Common.ToStringConverters
 
             result.Append(string.Format(formatPattern, valuesForFormattedString.ToArray()));
         }
-        #endregion
-
-        #region Methods (protected)
-        protected void Register(Type type, IParamValueToStringConverter converter)
-        {
-            _converters.Add(type, converter);
-        }
-
-        protected virtual void RegisterAllConverters()
-        {
-            Register(typeof(Guid), new GuidToStringConverter());
-            Register(typeof(Int32), new BaseToStringConverter<Int32>());
-            Register(typeof(uint), new BaseToStringConverter<uint>());
-            Register(typeof(Boolean), new BaseToStringConverter<Boolean>());
-            Register(typeof(string), new StringToStringConverter());
-            Register(typeof(decimal), new BaseToStringConverter<decimal>());
-            Register(typeof(Int64), new BaseToStringConverter<Int64>());
-            Register(typeof(DateTime), new BaseToStringConverter<DateTime>());
-            Register(typeof(DBNull), new DBNullToStringConverter());
-            Register(typeof(int[]), new EnumerableToStringConverter());
-            Register(typeof(Enum), new BaseToStringConverter<Enum>());
-            Register(typeof(double), new BaseToStringConverter<double>());
-            Register(typeof(Char), new BaseToStringConverter<Char>());
-            Register(typeof(TimeSpan), new BaseToStringConverter<TimeSpan>());
-        }
-
-        protected void Unregister(Type type)
-        {
-            _converters.Remove(type);
-        }
-        #endregion
     }
 }

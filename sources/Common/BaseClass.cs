@@ -8,7 +8,6 @@ namespace Common
 {
     public class BaseClass
     {
-        #region Methods (public)
         public virtual BaseClass Assign(object source)
         {
             var propertyInfos = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -40,17 +39,14 @@ namespace Common
         {
             return ToStringConverter.ConvertClass(this);
         }
-        #endregion
     }
 
     public class BaseClass<T> : BaseClass
         where T : BaseClass<T>
     {
-        #region Static Methods (public)
         public static PropertyInfo GetPropertyInfo(string propertyName)
         {
             return typeof(T).GetProperty(propertyName);
         }
-        #endregion
     }
 }
