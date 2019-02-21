@@ -1,9 +1,8 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace DAL.EF
 {
-    public class SpecificDbContext : IdentityDbContext<User>
+    public class SpecificDbContext : DbContext
     {
     }
 }

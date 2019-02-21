@@ -14,7 +14,7 @@ namespace Services
         void Create(CreateUserInputDto userInput, string password);
         void Delete(int id);
         GetAllUsersDto GetAll();
-        GetByIdUserDto GetById(int id);
+        GetByIdUserDto GetById(long id);
         void Update(UpdateUserInput updateInput, string password = null);
     }
 
@@ -53,7 +53,7 @@ namespace Services
             throw new NotImplementedException();
         }
 
-        public GetByIdUserDto GetById(int id)
+        public GetByIdUserDto GetById(long id)
         {
             var user = _usersRepository.GetById(id);
 
