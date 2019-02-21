@@ -32,4 +32,8 @@ namespace Domain
         public bool IsDeleted { get; set; }
         public DateTime? Updated { get; set; }
     }
+
+    public class Entity : Entity<long>
+    {
+    }
 }

@@ -9,7 +9,7 @@ namespace DAL.EF.Core
 {
     public class BaseRepository<TDbContext, TEntity, TEntityId> : IRepository<TEntity, TEntityId>
         where TEntity : class, IEntity<TEntityId>
-        where TDbContext : DbContext
+        where TDbContext : SpecificDbContext
     {
         public BaseRepository(TDbContext dbContext)
         {

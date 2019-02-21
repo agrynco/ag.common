@@ -20,4 +20,8 @@ namespace DAL.Abstract
         void Update(TEntity entity);
         void Update(TEntity entity, bool save);
     }
+
+    public interface IRepository<TEntity> : IRepository<TEntity, long> where TEntity : IEntity<long>
+    {
+    }
 }
