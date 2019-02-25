@@ -45,7 +45,13 @@ namespace Services
                 return null;
             }
 
-            return new AuthenticateUserDto();
+            return new AuthenticateUserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
         }
 
         public GetAllUsersDto GetAll()
@@ -55,7 +61,7 @@ namespace Services
 
         public GetByIdUserDto GetById(long id)
         {
-            var user = _usersRepository.GetById(id);
+            User user = _usersRepository.GetById(id);
 
             return new GetByIdUserDto
             {

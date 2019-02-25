@@ -1,9 +1,12 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using DAL.Abstract;
+using DAL.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -53,11 +56,15 @@ namespace Web.API
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-
-                AddAuthentication(services);
-
-                services.AddScoped<IUsersService, UsersService>();
             });
+
+            AddAuthentication(services);
+
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddDbContext<SpecificDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("Default")));
         }
 
         private void AddAuthentication(IServiceCollection services)
