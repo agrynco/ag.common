@@ -34,20 +34,23 @@ namespace Web.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseAuthentication();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+
+            app.UseMvc();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Info {Title = "You api title", Version = "v1"});
-                options.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                options.AddSecurityDefinition("oauth2", new ApiKeyScheme
                 {
                     In = "header",
                     Description = "Please enter JWT with Bearer into field",
@@ -56,6 +59,7 @@ namespace Web.API
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.DescribeAllEnumsAsStrings();
             });
 
             AddAuthentication(services);

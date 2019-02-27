@@ -79,7 +79,7 @@ namespace Web.API.Controllers
                 _usersService.Create(inputDto, createUserModel.Password);
                 return Ok();
             }
-            catch (ApplicationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new
                 {
