@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using Services;
 using Services.Dtos.Users;
 using Web.API.Models;
@@ -15,12 +16,13 @@ namespace Web.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiControllerBase
     {
         private readonly AppSettings _appSettings;
         private readonly IUsersService _usersService;
 
-        public UsersController(IUsersService usersService, IOptions<AppSettings> appSettings)
+        public UsersController(ILogger logger, IUsersService usersService, IOptions<AppSettings> appSettings)
+        : base(logger)
         {
             _usersService = usersService;
             _appSettings = appSettings.Value;

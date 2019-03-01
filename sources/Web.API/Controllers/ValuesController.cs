@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Web.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : ApiControllerBase
     {
+        public ValuesController(ILogger logger) : base(logger)
+        {
+        }
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Logger.Information($"Delete id={id}");
         }
 
         // GET api/values

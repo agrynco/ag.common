@@ -9,11 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Core;
 using Services;
 using Services.Dtos.Users;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
+using ILogger = Serilog.ILogger;
 
 namespace Web.API
 {
@@ -21,13 +25,14 @@ namespace Web.API
     {
         public Startup(IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -38,6 +43,8 @@ namespace Web.API
 
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+
+            loggerFactory.AddSerilog();
 
             app.UseMvc();
         }
@@ -69,6 +76,7 @@ namespace Web.API
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddDbContext<SpecificDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddSingleton(Log.Logger);
         }
 
         private void AddAuthentication(IServiceCollection services)
