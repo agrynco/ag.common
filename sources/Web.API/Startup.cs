@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DAL.Abstract;
 using DAL.EF;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,13 +14,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Serilog;
-using Serilog.Core;
 using Services;
 using Services.Dtos.Users;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
-using ILogger = Serilog.ILogger;
+using Web.API.Helpers;
 
 namespace Web.API
 {
@@ -32,7 +35,8 @@ namespace Web.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            ODataModelBuilder modelBuilder)
         {
             if (env.IsDevelopment())
             {
@@ -46,13 +50,40 @@ namespace Web.API
 
             loggerFactory.AddSerilog();
 
-            app.UseMvc();
+            app.UseMvc(routeBuilder =>
+                {
+                    routeBuilder.MapODataServiceRoute("ODataRoutes", "api/odata",
+                        modelBuilder.GetEdmModel(app.ApplicationServices));
+
+                    routeBuilder.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
+                    routeBuilder.EnableDependencyInjection();
+                });
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddOData();
+            services.AddMvc(op =>
+            {
+                op.EnableEndpointRouting = false;
+                
+
+                foreach (var formatter in op.OutputFormatters
+                    .OfType<ODataOutputFormatter>()
+                    .Where(it => !it.SupportedMediaTypes.Any()))
+                {
+                    formatter.SupportedMediaTypes.Add(
+                        new MediaTypeHeaderValue("application/prs.mock-odata"));
+                }
+                foreach (var formatter in op.InputFormatters
+                    .OfType<ODataInputFormatter>()
+                    .Where(it => !it.SupportedMediaTypes.Any()))
+                {
+                    formatter.SupportedMediaTypes.Add(
+                        new MediaTypeHeaderValue("application/prs.mock-odata"));
+                }
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(options =>
             {
@@ -71,6 +102,7 @@ namespace Web.API
 
             AddAuthentication(services);
 
+            services.AddTransient<ODataModelBuilder>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();

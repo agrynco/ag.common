@@ -8,4 +8,10 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.OData">
+      <HintPath>C:\Users\agrynco\.nuget\packages\microsoft.aspnetcore.odata\7.1.0\lib\netstandard2.0\Microsoft.AspNetCore.OData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

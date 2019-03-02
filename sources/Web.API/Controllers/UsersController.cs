@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using Domain;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,9 +17,10 @@ using Web.API.Models;
 
 namespace Web.API.Controllers
 {
+    [Produces("application/json")]
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/odata/[controller]")]
     public class UsersController : ApiControllerBase
     {
         private readonly AppSettings _appSettings;
@@ -63,6 +68,14 @@ namespace Web.API.Controllers
                 authenticateUserDto.LastName,
                 Token = tokenString
             });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
+        public IQueryable<User> Get()
+        {
+            return _usersService.GetAll();
         }
 
         [AllowAnonymous]

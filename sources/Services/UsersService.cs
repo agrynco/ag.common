@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,7 +15,7 @@ namespace Services
         AuthenticateUserDto Authenticate(string email, string password);
         void Create(CreateUserInputDto userInput, string password);
         void Delete(int id);
-        PagedResultDto<UserListItemDto> GetAll();
+        IQueryable<User> GetAll();
         GetByIdUserDto GetById(long id);
         void Update(UpdateUserInput updateInput, string password = null);
     }
@@ -55,9 +56,9 @@ namespace Services
             };
         }
 
-        public PagedResultDto<UserListItemDto> GetAll()
+        public IQueryable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _usersRepository.GetAll();
         }
 
         public GetByIdUserDto GetById(long id)
