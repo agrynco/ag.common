@@ -1,6 +1,6 @@
 ﻿namespace Services.Dtos.Users
 {
-    public class GetAllUsersDto
+    public class UserListItemDto
     {
         
     }

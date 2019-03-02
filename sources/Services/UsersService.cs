@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DAL.Abstract;
 using Domain;
+using Services.Dtos;
 using Services.Dtos.Users;
 
 namespace Services
@@ -13,7 +14,7 @@ namespace Services
         AuthenticateUserDto Authenticate(string email, string password);
         void Create(CreateUserInputDto userInput, string password);
         void Delete(int id);
-        GetAllUsersDto GetAll();
+        PagedResultDto<UserListItemDto> GetAll();
         GetByIdUserDto GetById(long id);
         void Update(UpdateUserInput updateInput, string password = null);
     }
@@ -54,7 +55,7 @@ namespace Services
             };
         }
 
-        public GetAllUsersDto GetAll()
+        public PagedResultDto<UserListItemDto> GetAll()
         {
             throw new NotImplementedException();
         }
